@@ -14,10 +14,13 @@ class DataBase:
         try:
             with DBHelper.get_connection() as conn:
                 cursor = conn.cursor()
-                columns = DBHelper.get_columns(DataBase.TABLE_NAME, without_first=True)
+                columns = DBHelper.get_columns(DataBase.TABLE_NAME,
+                                               without_first=True)
                 columns_str = ", ".join(columns)
                 placeholders = ", ".join(["?"] * len(columns))
-                cursor.execute(f"SELECT COUNT(*) FROM {DataBase.TABLE_NAME} WHERE name = ?", (record[0],))
+                cursor.execute(
+                    f"SELECT COUNT(*) FROM {DataBase.TABLE_NAME} WHERE name = ?",
+                    (record[0], ))
                 if cursor.fetchone()[0] == 0:
                     query = f"INSERT INTO {DataBase.TABLE_NAME} ({columns_str}) VALUES ({placeholders})"
                     cursor.execute(query, record)
@@ -32,7 +35,9 @@ class DataBase:
         try:
             with DBHelper.get_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute(f"DELETE FROM {DataBase.TABLE_NAME} WHERE name = ?", (delete_name,))
+                cursor.execute(
+                    f"DELETE FROM {DataBase.TABLE_NAME} WHERE name = ?",
+                    (delete_name, ))
                 print("Запись успешно удалена.")
         except sqlite3.Error as error:
             print("Ошибка при удалении записи:", error)
@@ -43,11 +48,14 @@ class DataBase:
         try:
             with DBHelper.get_connection() as conn:
                 cursor = conn.cursor()
-                columns = DBHelper.get_columns(DataBase.TABLE_NAME, without_first=True)
+                columns = DBHelper.get_columns(DataBase.TABLE_NAME,
+                                               without_first=True)
                 columns_str = ", ".join(columns)
                 placeholders = ", ".join(["?"] * len(columns))
                 for record in records:
-                    cursor.execute(f"SELECT COUNT(*) FROM {DataBase.TABLE_NAME} WHERE name = ?", (record[0],))
+                    cursor.execute(
+                        f"SELECT COUNT(*) FROM {DataBase.TABLE_NAME} WHERE name = ?",
+                        (record[0], ))
                     if cursor.fetchone()[0] == 0:
                         query = f"INSERT INTO {DataBase.TABLE_NAME} ({columns_str}) VALUES ({placeholders})"
                         cursor.execute(query, record)
@@ -68,7 +76,8 @@ class DataBase:
                 print("Все записи были успешно удалены.")
 
         except sqlite3.Error as error:
-            print("Ошибка при очистки базы данных:", error)
+            print("Ошибка при очистке базы данных:", error)
+
 
 #DataBase.insert_multiple_records(engine)
 #DataBase.load_to_database(engine[1])
